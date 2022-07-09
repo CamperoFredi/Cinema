@@ -54,7 +54,7 @@ public class Cliente extends Usuario {
         if (!this.SesionIniciada) {
             // Aqui se crea una cadena con todos los datos pasados al constructor
             insertar = "";
-            insertar += "INSERT INTO USUARIO (nomUsuario, nya, dni, contra, nroTarjeta, fecha) VALUE (";
+            insertar += "INSERT INTO Usuarios (nomUsuario, nya, dni, contra, nroTarjeta, fecha) VALUE (";
             insertar += ("\'" + getNomUsuario() + "\',");
             insertar += ("\'" + getnya() + "\',");
             insertar += (getDNI() + ",");

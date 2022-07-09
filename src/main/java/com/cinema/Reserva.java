@@ -94,7 +94,7 @@ public class Reserva {
         this.DescuentoId = descuentoId;
     }
 
-    public void agregarReserva(Reserva reser) throws SQLException {
+    public String agregarReserva(Reserva reser) throws SQLException {
         try {
             conexionDB.executeUpdate(
                     "INSERT INTO reservas(UsuarioId, SalaId, DescuentoId, DiaFuncion, Modificada, Precio, ConfirmaPago, FechaCreacion) VALUES(1, '"
@@ -105,15 +105,11 @@ public class Reserva {
                             + "', '" + reser.getPrecio()
                             + "', '" + reser.getConfirmaPago()
                             + "', '" + reser.getFechaCreacion() + "')");
-
+            return "Se agrego la reserva";
         } catch (SQLException e) {
             System.out.println(e.getLocalizedMessage());
-            try {
-                conexionDB.close();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
         }
+        return null;
     }
 
     public ArrayList<Reserva> getMisReservas(String dni) {
@@ -136,9 +132,39 @@ public class Reserva {
                 reservas.add(r);
             }
             return reservas;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-            // rs.close();
-            // stmt.close();
+    public String modificarReservas(Reserva reser) {
+        try {
+            conexionDB.executeUpdate(
+                    "UPDATE Reservas SET UsuarioId = '1', SalaId = '"
+                            + reser.getSalaId()
+                            + "', DescuentoId = '" + reser.getDescuentoId()
+                            + "', DiaFuncion = '" + reser.getDiaFuncion()
+                            + "', Modificada = '" + reser.getModificada()
+                            + "', Precio = '" + reser.getPrecio()
+                            + "', ConfirmaPago = '" + reser.getConfirmaPago()
+                            + "', FechaCreacion = '" + reser.getFechaCreacion() + "'");
+            return "Reserva modificada correctamente";
+        } catch (SQLException e) {
+            System.out.println(e.getLocalizedMessage());
+        }
+        return null;
+    }
+
+    public ResultSet getReserva(int usuarioId) {
+        try {
+            Connection con = conexionDB.getConnection();
+            String SQL = "SELECT * FROM Reservas WHERE UsuarioId = " + usuarioId + ";";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()) {
+                return rs;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

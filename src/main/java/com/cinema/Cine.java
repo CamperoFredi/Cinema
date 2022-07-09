@@ -9,10 +9,10 @@ import java.util.ArrayList;
 public class Cine {
     Statement conexionDB = ConexionMysql.getStatement();
 
-    public void agregarNuevaSala(Sala nSala) throws SQLException {
+    public String agregarNuevaSala(Sala nSala) throws SQLException {
         try {
             conexionDB.executeUpdate(
-                    "INSERT INTO salas(SalaNro, NombreSala, PeliculaId, Horario, Capacidad, Tipo, FechaCreacion) VALUES('"
+                    "INSERT INTO Salas(SalaNro, NombreSala, PeliculaId, Horario, Capacidad, Tipo, FechaCreacion) VALUES('"
                             + nSala.getNroSala()
                             + "', '" + nSala.getNombreSala()
                             + "', '" + nSala.getPeliculaId()
@@ -20,35 +20,28 @@ public class Cine {
                             + "', '" + nSala.getCapacidad()
                             + "', '" + nSala.getTipo()
                             + "', '" + nSala.getFechaCreacion() + "')");
+            return "Se agrego la sala " + nSala.getNombreSala() + " correctamente.";
         } catch (SQLException e) {
             System.out.println(e.getLocalizedMessage());
-            try {
-                conexionDB.close();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
         }
+        return null;
     }
 
-    public void modificarSala(Sala mSala) {
+    public String modificarSala(Sala mSala) {
         try {
             conexionDB.executeUpdate(
-                    "UPDATE salas SET SalaNro = '" + mSala.getNroSala()
+                    "UPDATE Salas SET SalaNro = '" + mSala.getNroSala()
                             + "', NombreSala = '" + mSala.getNombreSala()
                             + "', PeliculaId = '" + mSala.getPeliculaId()
                             + "', Horario = '" + mSala.getHorario()
                             + "', Capacidad = '" + mSala.getCapacidad()
                             + "', Tipo = '" + mSala.getTipo()
                             + "' WHERE Id = '" + mSala.getId() + "'");
-
+            return "Se actualizo la sala " + mSala.getNombreSala() + " correctamente.";
         } catch (SQLException e) {
             System.out.println(e.getLocalizedMessage());
-            try {
-                conexionDB.close();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
         }
+        return null;
     }
 
     public Boolean isAdmin(Usuario usuario) {
@@ -56,24 +49,25 @@ public class Cine {
         String admin;
         ResultSet rs;
         try {
-            rs = conexionDB.executeQuery("select rol from usuarios");
+            rs = conexionDB.executeQuery("SELECT * FROM Usuarios WHERE dni = '" + usuario.getDNI() + "'");
             while (rs.next()) {
-                admin = rs.getString(1);
-                if (admin.equals("admin")) {
+                admin = rs.getString("admin");
+                if (admin.equals("1")) {
                     return true;
+                } else {
+                    return false;
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
         }
-
-        return true;
+        return false;
     }
 
     public ArrayList<Sala> getListSalas() {
         try {
             Connection con = conexionDB.getConnection();
-            String SQL = "SELECT * FROM salas";
+            String SQL = "SELECT * FROM Salas";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
             ArrayList<Sala> salas = new ArrayList<Sala>();
@@ -89,11 +83,18 @@ public class Cine {
 
             }
             return salas;
-
-            // rs.close();
-            // stmt.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public String borrarSala(int idSala) {
+        try {
+            conexionDB.executeUpdate("DELETE FROM Salas WHERE Id = '" + idSala + "'");
+            return "Sala eliminada correctamente.";
+        } catch (SQLException e) {
+            System.out.println(e.getLocalizedMessage());
         }
         return null;
     }

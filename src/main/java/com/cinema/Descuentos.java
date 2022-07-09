@@ -1,5 +1,7 @@
 package com.cinema;
 
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +18,8 @@ public class Descuentos {
     private String DiaDescuento;
     private int Porcentaje;
     private String FechaCreacion;
+
+    Statement conexionDB = ConexionMysql.getStatement();
 
     // Id, DiaDesceunto, Porcentaje, FechaCreacion
     public Descuentos() {
@@ -86,7 +90,7 @@ public class Descuentos {
         return "Descuentos: " + "Dia de descuento = " + DiaDescuento + ", Porcentaje = " + Porcentaje + "%.";
     }
 
-    public static String GetDescuento() throws ParseException {
+    public static String GetDiaDescuentoActual() throws ParseException {
         String dateFormat = getFechaActual();
         String inputDateStr = String.format(dateFormat);
         Date inputDate = new SimpleDateFormat("dd/MM/yyyy").parse(inputDateStr);
@@ -130,6 +134,19 @@ public class Descuentos {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         return dateFormat.format(date);
+    }
+
+    public String modificarReserva(Descuentos desc) {
+        try {
+            conexionDB.executeUpdate(
+                    "UPDATE descuentos SET Porcentaje = " + desc.getPorcentaje()
+                            + "' WHERE Id = " + desc.getId() + ";");
+
+            return "Descuento modificado correctamente.";
+        } catch (SQLException e) {
+            System.out.println(e.getLocalizedMessage());
+        }
+        return null;
     }
 
 }
