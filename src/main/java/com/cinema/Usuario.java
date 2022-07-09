@@ -1,84 +1,98 @@
 package com.cinema;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-public class Usuario {
-    private String Nombre;
-    private String Apellido;
-    private String Documento;
-    private String Rol;
-    private Boolean Activo;
-    private String Password;
-    private String FechaRegistro;
-
-    public Usuario(String nombre, String apellido, String documento, String password) {
-        this.Nombre = nombre;
-        this.Apellido = apellido;
-        this.Documento = documento;
-        this.Password = password;
-    }
-
-    public String getNombre() {
-        return this.Nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.Nombre = nombre;
-    }
-
-    public String getApellido() {
-        return this.Apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.Apellido = apellido;
-    }
-
-    public String getDocumento() {
-        return this.Documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.Documento = documento;
-    }
-
-    public String getRol() {
-        return this.Rol = "Cliente";
-    }
-
-    public void setRol() {
-        this.Rol = "Cliente";
-    }
-
-    public Boolean getActivo() {
-        return this.Activo = true;
-    }
-
-    public void setActivo() {
-        this.Activo = true;
-    }
-
-    public String getPassword() {
-        return this.Password;
-    }
-
-    public void setPassword(String password) {
-        this.Password = password;
-    }
-
-    public String getFechaRegistro() {
-        LocalDateTime localDate = LocalDateTime.now();
-        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        String dateCreate = localDate.format(formatterDate);
-        return this.FechaRegistro = dateCreate;
-    }
-
-    public void setFechaRegistro(String fechaRegistro) {
-        LocalDateTime localDate = LocalDateTime.now();
-        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        String dateCreate = localDate.format(formatterDate);
-        this.FechaRegistro = dateCreate;
-    }
-
+public class Usuario 
+{
+	protected String nomUsuario;		//Nombre de Usuario
+	protected String nya;				//Nombre y Apellido
+	protected long dni;
+	protected String contra;			//contrasenia
+	protected boolean SesionIniciada = false;
+	protected boolean admin;
+	
+	/*
+	La variable SesionIniciada tiene varias funciones:
+	* Controla que no se inicie mas de una sesion
+	* Siempre que no haya ninguna sesion abierta se pueden registrar n clientes
+	* Cuando este una sesion abierta no se permite el registro de algun cliente
+	*/
+	
+	Statement stm = ConexionMysql.getStatement();
+	ResultSet result = stm.executeQuery("SELECT * from USUARIO");
+	
+	public Usuario (String nomUsuario, String nya, long dni, String contra) throws SQLException
+	{
+		this.nomUsuario = nomUsuario;
+		this.nya = nya;
+		this.dni = dni;
+		this.contra = contra;
+		this.admin = false;
+	}
+	
+	public String getNomUsuario ()
+	{
+		return this.nomUsuario;
+	}
+	
+	public String getnya ()
+	{
+		return this.nya;
+	}
+	
+	public long getDNI ()
+	{
+		return this.dni;
+	}
+	
+	public String getcontra ()
+	{
+		return this.contra;
+	}
+	
+	//Inicio de Sesion
+		public void IniciarSesion (String nombreUsuario, String contra) throws SQLException
+		{
+			
+			if (this.SesionIniciada)
+			{
+				System.out.println("Hay una sesion iniciada. Cierrela si quiere iniciar sesion con una cuenta nueva");
+			}
+			else
+			{
+				ResultSet result = stm.executeQuery("select * from USUARIO");
+				//Se compara el nombre de usuario y contrasenia de la base de datos con el nombre de usuario y contrasenia pasados por parametro 
+				while (result.next () && !this.SesionIniciada)
+				{
+					if (nombreUsuario.equals(result.getString("nomUsuario")) && contra.equals(result.getString("contra")))
+					{
+						this.SesionIniciada = true;			//Si el nombre de usuario y la contrasenia coinciden, se pone a la sesion iniciada en true
+					}
+				}
+				if (this.SesionIniciada)
+				{
+					System.out.println("Sesion iniciada con el usuario: " + nombreUsuario);
+				}
+				else
+				{
+					System.out.println("Nombre de usuario o contrasenia incorrectos.");
+				}
+			}
+			
+		}
+		
+		//Cierre de Sesion
+		public void CerrarSesion ()
+		{
+			this.SesionIniciada = false;
+			System.out.println("Session cerrada.");
+		}
+		
+		//Pregunta si el cliente es un administrador para poder realizar las otras operaciones que no puede hacer un cliente
+		public boolean EsAdmin ()
+		{
+			return this.admin;
+		}
 }
