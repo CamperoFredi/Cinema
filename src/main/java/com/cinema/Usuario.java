@@ -55,7 +55,7 @@ public class Usuario {
         if (this.SesionIniciada) {
             System.out.println("Hay una sesion iniciada. Cierrela si quiere iniciar sesion con una cuenta nueva");
         } else {
-            ResultSet result = stm.executeQuery("select * from USUARIO");
+            ResultSet result = stm.executeQuery("select * from usuarios");
             // Se compara el nombre de usuario y contrasenia de la base de datos con el
             // nombre de usuario y contrasenia pasados por parametro
             while (result.next() && !this.SesionIniciada) {
