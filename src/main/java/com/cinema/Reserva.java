@@ -1,8 +1,13 @@
 package com.cinema;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Reserva {
@@ -14,6 +19,8 @@ public class Reserva {
     private String Precio;
     private Boolean ConfirmaPago;
     private String FechaCreacion;
+
+    Statement conexionDB = ConexionMysql.getStatement();
 
     public Reserva() {
     }
@@ -85,6 +92,57 @@ public class Reserva {
 
     public void setDescuentoId(int descuentoId) {
         this.DescuentoId = descuentoId;
+    }
+
+    public void agregarReserva(Reserva reser) throws SQLException {
+        try {
+            conexionDB.executeUpdate(
+                    "INSERT INTO reservas(UsuarioId, SalaId, DescuentoId, DiaFuncion, Modificada, Precio, ConfirmaPago, FechaCreacion) VALUES(1, '"
+                            + reser.getSalaId()
+                            + "', '" + reser.getDescuentoId()
+                            + "', '" + reser.getDiaFuncion()
+                            + "', '" + reser.getModificada()
+                            + "', '" + reser.getPrecio()
+                            + "', '" + reser.getConfirmaPago()
+                            + "', '" + reser.getFechaCreacion() + "')");
+
+        } catch (SQLException e) {
+            System.out.println(e.getLocalizedMessage());
+            try {
+                conexionDB.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    public ArrayList<Reserva> getMisReservas(String dni) {
+        try {
+            Connection con = conexionDB.getConnection();
+            String SQL = "SELECT * FROM reservas INNER JOIN usuarios ON reservas.UsuarioId = usuarios.Id WHERE usuarios.dni = "
+                    + dni + ";";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(SQL);
+            ArrayList<Reserva> reservas = new ArrayList<Reserva>();
+            while (rs.next()) {
+                System.out.println(rs.getString("DiaFuncion") + ", " + rs.getString("Precio"));
+                Reserva r = new Reserva();
+                r.setSalaId(rs.getInt("SalaNro"));
+                r.setDiaFuncion(rs.getString("DiaFuncion"));
+                r.setModificada(rs.getBoolean("Modificada"));
+                r.setPrecio(rs.getString("Precio"));
+                r.setConfirmaPago(rs.getBoolean("ConfirmaPago"));
+                r.setFechaCreacion(rs.getString("FechaCreacion"));
+                reservas.add(r);
+            }
+            return reservas;
+
+            // rs.close();
+            // stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

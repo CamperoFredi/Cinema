@@ -7,6 +7,8 @@ import java.sql.SQLException;
 public final class App {
     private static Cine cine = new Cine();
     private static Cliente cliente = new Cliente();
+    private static Usuario usuario = new Usuario();
+    private static Reserva reserva = new Reserva();
 
     public static void main(String[] args) {
         Gson gson = new Gson();
@@ -54,7 +56,7 @@ public final class App {
                     .equals(cine.isAdmin(gson.fromJson(request.headers("Authorization"), Usuario.class)))) {
                 try {
                     Reserva nuevaReserva = gson.fromJson(request.body(), Reserva.class);
-                    cliente.agregarReserva(nuevaReserva);
+                    reserva.agregarReserva(nuevaReserva);
                     System.out.println("La reservs se ha creado correctamente.");
                     return "La reservs se ha creado correctamente.";
                 } catch (SQLException e) {
@@ -73,7 +75,7 @@ public final class App {
 
         get("/getListReservasByUsuario", (request, response) -> {
             response.type("application/json");
-            return cliente.getMisReservas();
+            return reserva.getMisReservas("12345678");
         }, gson::toJson);
 
     }
