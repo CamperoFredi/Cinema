@@ -23,6 +23,9 @@ public class Sala {
         this.Tipo = tipo;
     }
 
+    public Sala() {
+    }
+
     public Integer getId() {
         return this.Id;
     }

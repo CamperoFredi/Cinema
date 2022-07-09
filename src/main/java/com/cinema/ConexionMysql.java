@@ -9,8 +9,8 @@ public class ConexionMysql {
 
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String URL_DB = "jdbc:mysql://localhost:3306/cinema";
-    private static final String USER = "";
-    private static final String PASS = "";
+    private static final String USER = "root";
+    private static final String PASS = "Fredi001";
 
     public static Statement getStatement() {
         Connection conn = null;

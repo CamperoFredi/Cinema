@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 public final class App {
     private static Cine cine = new Cine();
+    private static Cliente cliente = new Cliente();
 
     public static void main(String[] args) {
         Gson gson = new Gson();
@@ -46,6 +47,34 @@ public final class App {
                 return "Usted no posee los permisos necesarios para realizar modificaciones en la Sala.";
             }
         });
+
+        post("/crearReserva", "application/json", (request, response) -> {
+
+            if (Boolean.TRUE
+                    .equals(cine.isAdmin(gson.fromJson(request.headers("Authorization"), Usuario.class)))) {
+                try {
+                    Reserva nuevaReserva = gson.fromJson(request.body(), Reserva.class);
+                    cliente.agregarReserva(nuevaReserva);
+                    System.out.println("La reservs se ha creado correctamente.");
+                    return "La reservs se ha creado correctamente.";
+                } catch (SQLException e) {
+                    response.status(400);
+                    return e.getLocalizedMessage();
+                }
+            } else {
+                return "Usted no posee los permisos necesarios para crear una nueva sala.";
+            }
+        });
+
+        get("/getListSalas", (request, response) -> {
+            response.type("application/json");
+            return cine.getListSalas();
+        }, gson::toJson);
+
+        get("/getListReservasByUsuario", (request, response) -> {
+            response.type("application/json");
+            return cliente.getMisReservas();
+        }, gson::toJson);
 
     }
 

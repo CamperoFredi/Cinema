@@ -1,7 +1,17 @@
 package com.cinema;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.tree.RowMapper;
 
 public class Cine {
     Statement conexionDB = ConexionMysql.getStatement();
@@ -49,6 +59,50 @@ public class Cine {
     }
 
     public Boolean isAdmin(Usuario usuario) {
+
+        String admin;
+        ResultSet rs;
+        try {
+            rs = conexionDB.executeQuery("select rol from usuarios");
+            while (rs.next()) {
+                admin = rs.getString(1);
+                if (admin.equals("admin")) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return true;
     }
+
+    public ArrayList<Sala> getListSalas() {
+        try {
+            Connection con = conexionDB.getConnection();
+            String SQL = "SELECT * FROM salas";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(SQL);
+            ArrayList<Sala> salas = new ArrayList<Sala>();
+            while (rs.next()) {
+                System.out.println(rs.getString("SalaNro") + ", " + rs.getString("NombreSala"));
+                Sala sala = new Sala();
+                sala.setNombreSala(rs.getString("nombreSala"));
+                sala.setNroSala(rs.getString("SalaNro"));
+                sala.setPeliculaId(rs.getString("PeliculaId"));
+                sala.setHorario(rs.getString("Horario"));
+                sala.setTipo(rs.getString("Tipo"));
+                salas.add(sala);
+
+            }
+            return salas;
+
+            // rs.close();
+            // stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
