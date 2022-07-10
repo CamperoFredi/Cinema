@@ -14,28 +14,8 @@ public class Cliente extends Usuario {
     }
 
     // Constructor para el cliente
-    public Cliente(String nomUsuario, String nya, String dni, String contra, long nroTarjeta, String fecha)
-            throws SQLException {
-        super(nomUsuario, nya, dni, contra);
-        this.nroTarjeta = nroTarjeta;
-        this.fecha = fecha;
-        RegistroDeUsuario();
+    public Cliente() throws SQLException {
     }
-
-    // Constructor para el administrador
-    /*
-     * public Cliente (String nomUsuario, String nya, long dni, String contra,
-     * String fecha, boolean admin) throws SQLException
-     * {
-     * this.nomUsuario = nomUsuario;
-     * this.nya = nya;
-     * this.dni = dni;
-     * this.contra = contra;
-     * this.fecha = fecha;
-     * this.admin = true;
-     * RegistroDeUsuario ();
-     * }
-     */
 
     // Getters
 
@@ -51,23 +31,34 @@ public class Cliente extends Usuario {
     public void RegistroDeUsuario() throws SQLException {
         String insertar;
 
-        if (!this.SesionIniciada) {
-            // Aqui se crea una cadena con todos los datos pasados al constructor
-            insertar = "";
-            insertar += "INSERT INTO Usuarios (nomUsuario, nya, dni, contra, nroTarjeta, fecha) VALUE (";
-            insertar += ("\'" + getNomUsuario() + "\',");
-            insertar += ("\'" + getnya() + "\',");
-            insertar += (getDNI() + ",");
-            insertar += ("\'" + getcontra() + "\'" + ",");
-            insertar += (getNroTarjeta() + ",");
-            insertar += ("\'" + getFecha() + "\')");
+        System.out.println("Ingrese un nombre de usuario: \n");
+        setNomUsuario (sc.nextLine());
+        
+        System.out.println("Ingrese una contraseña: \n");
+        setContra (sc.nextLine());
+        
+        System.out.println("Ingrese su nombre y apellido: \n");
+        setNyA (sc.nextLine());
+        
+        System.out.println("Ingrese su DNI: \n");
+        setDNI (sc.nextLine());
+        
+        System.out.println("Ingrese su numero de tarjeta: \n");
+        setNroTarjeta (sc.nextLong());
 
-            // Con esta sentencia se sube la cadena a la base de datos
-            stm.executeUpdate(insertar);
+        // Aqui se crea una cadena con todos los datos pasados al constructor
+        insertar = "";
+        insertar += "INSERT INTO Usuarios (nomUsuario, nya, dni, contra, nroTarjeta, fecha) VALUE (";
+        insertar += ("\'" + getNomUsuario() + "\',");
+        insertar += ("\'" + getnya() + "\',");
+        insertar += (getDNI() + ",");
+        insertar += ("\'" + getcontra() + "\'" + ",");
+        insertar += (getNroTarjeta() + ",");
+        insertar += ("\'" + getFecha() + "\')");
 
-            System.out.println("Se registro el usuario: " + this.nomUsuario);
-        } else {
-            System.out.println("No puede registrar el usuario porque hay una sesion abierta.");
-        }
+        // Con esta sentencia se sube la cadena a la base de datos
+        stm.executeUpdate(insertar);
+
+        System.out.println("Se registro el usuario: " + this.nomUsuario);
     }
 }

@@ -16,7 +16,7 @@ public class Pelicula {
     Statement stm = ConexionMysql.getStatement();
     // ResultSet result = stm.executeQuery("select * from PELICULA");
 
-    public Pelicula(String nombrePelicula, boolean EsAdmin) throws SQLException {
+    public Pelicula(String nombrePelicula) throws SQLException {
         this.nombrePelicula = nombrePelicula;
         // CrearPelicula(EsAdmin);
     }

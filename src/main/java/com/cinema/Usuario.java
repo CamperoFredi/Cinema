@@ -60,6 +60,8 @@ public class Usuario {
             // nombre de usuario y contrasenia pasados por parametro
             while (result.next() && !this.SesionIniciada) {
                 if (nombreUsuario.equals(result.getString("nomUsuario")) && contra.equals(result.getString("contra"))) {
+                    setNomUsuario (result.getString("nomUsuario"));
+					setDNI (result.getString("dni"));
                     this.SesionIniciada = true; // Si el nombre de usuario y la contrasenia coinciden, se pone a la
                                                 // sesion iniciada en true
                 }
