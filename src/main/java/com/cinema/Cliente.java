@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Cliente extends Usuario {
-    private long nroTarjeta; // Numero de Tarjeta
+    private String nroTarjeta; // Numero de Tarjeta
     private String fecha; // Fecha de registro en el formato "dd-MM-yyyy"
 
     Statement stm = ConexionMysql.getStatement();
@@ -16,7 +16,7 @@ public class Cliente extends Usuario {
 
     // Getters
 
-    public long getNroTarjeta() {
+    public String getNroTarjeta() {
         return this.nroTarjeta;
     }
 
@@ -24,7 +24,7 @@ public class Cliente extends Usuario {
         return this.fecha;
     }
 
-    private void setNroTarjeta (long nuevoNroTarjeta)
+    private void setNroTarjeta (String nuevoNroTarjeta)
 	{
 		this.nroTarjeta = nuevoNroTarjeta;
 	}
@@ -48,17 +48,17 @@ public class Cliente extends Usuario {
         setDNI (sc.nextLine());
         
         System.out.println("Ingrese su numero de tarjeta: \n");
-        setNroTarjeta (sc.nextLong());
+        setNroTarjeta (sc.nextLIne());
 
         // Aqui se crea una cadena con todos los datos pasados al constructor
         insertar = "";
-        insertar += "INSERT INTO Usuarios (nomUsuario, nya, dni, contra, nroTarjeta, fecha) VALUE (";
-        insertar += ("\'" + getNomUsuario() + "\',");
-        insertar += ("\'" + getnya() + "\',");
-        insertar += (getDNI() + ",");
-        insertar += ("\'" + getcontra() + "\'" + ",");
-        insertar += (getNroTarjeta() + ",");
-        insertar += ("\'" + getFecha() + "\')");
+        insertar += "INSERT INTO USUARIO (nomUsuario, nya, dni, contra, nroTarjeta, fecha) VALUE (";
+			insertar += ("\'" + getNomUsuario () + "\',");
+			insertar += ("\'" + getnya () + "\',");
+			insertar += ("\'" + getDNI () + ",");
+			insertar += ("\'" + getcontra ()+ "\'" + ",");
+			insertar += ("\'" + getNroTarjeta () + ",");
+			insertar += ("\'" + getFecha ()+ "\')");
 
         // Con esta sentencia se sube la cadena a la base de datos
         stm.executeUpdate(insertar);
