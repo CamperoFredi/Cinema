@@ -1,10 +1,13 @@
 package com.cinema;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -20,7 +23,8 @@ public class Descuentos {
     public Descuentos() {
     }
 
-    public Descuentos(String diaDescuento, int porcentaje, String fechaCreacion) {
+    public Descuentos(int id, String diaDescuento, int porcentaje, String fechaCreacion) {
+        this.Id = id;
         this.DiaDescuento = diaDescuento;
         this.Porcentaje = porcentaje;
         this.FechaCreacion = fechaCreacion;
@@ -128,11 +132,11 @@ public class Descuentos {
         return dateFormat.format(date);
     }
 
-    public String modificarReserva(Descuentos desc) throws ParseException {
+    public String modificarDescuento(int id, int desc) {
         try {
             conexionDB.executeUpdate(
-                    "UPDATE descuentos SET Porcentaje = " + desc.getPorcentaje()
-                            + "' WHERE Id = " + desc.getId() + ";");
+                    "UPDATE descuentos SET Porcentaje = " + desc
+                            + " WHERE Id = " + id);
 
             return "Descuento modificado correctamente.";
         } catch (SQLException e) {
@@ -151,6 +155,27 @@ public class Descuentos {
             System.out.println(e.getLocalizedMessage());
         }
         return id;
+    }
+
+    public ArrayList<String> getListDescuentos() {
+        try {
+            Connection con = conexionDB.getConnection();
+            String SQL = "SELECT * FROM Descuentos;";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(SQL);
+            ArrayList<String> salas = new ArrayList<>();
+            while (rs.next()) {
+                System.out.println("Id: " + rs.getInt("Id") + " Dia: " + rs.getString("DiaDescuento")
+                        + " Descuento: " + rs.getInt("Porcentaje") + "%");
+                salas.add(rs.getString("Id"));
+                salas.add(rs.getString("DiaDescuento"));
+                salas.add(rs.getString("Porcentaje"));
+            }
+            return salas;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
 }

@@ -12,13 +12,14 @@ public class Cine {
     public String agregarNuevaSala(Sala nSala) throws SQLException {
         try {
             conexionDB.executeUpdate(
-                    "INSERT INTO Salas(SalaNro, NombreSala, PeliculaId, Horario, Capacidad, Tipo, FechaCreacion) VALUES('"
+                    "INSERT INTO Salas(SalaNro, NombreSala, PeliculaId, Horario, Capacidad, Tipo, Precio, FechaCreacion) VALUES('"
                             + nSala.getNroSala()
                             + "', '" + nSala.getNombreSala()
                             + "', '" + nSala.getPeliculaId()
                             + "', '" + nSala.getHorario()
                             + "', '" + nSala.getCapacidad()
                             + "', '" + nSala.getTipo()
+                            + "', '" + nSala.getPrecio()
                             + "', '" + nSala.getFechaCreacion() + "')");
             return "Se agrego la sala " + nSala.getNombreSala() + " correctamente.";
         } catch (SQLException e) {
@@ -72,11 +73,20 @@ public class Cine {
             ResultSet rs = stmt.executeQuery(SQL);
             ArrayList<String> salas = new ArrayList<>();
             while (rs.next()) {
+                System.out.println(rs.getString("SalaNro")
+                        + " -Nombre " + rs.getString("nombreSala")
+                        + " -Pelicula " + rs.getString("NomPelicula")
+                        + " -Horario " + rs.getString("Horario")
+                        + " -Capacidad " + rs.getString("Capacidad")
+                        + " -Tipo " + rs.getString("Tipo")
+                        + " -Precio " + rs.getString("Precio"));
+                salas.add(rs.getString("Horario"));
                 salas.add(rs.getString("SalaNro"));
                 salas.add(rs.getString("nombreSala"));
                 salas.add(rs.getString("PeliculaId"));
                 salas.add(rs.getString("Horario"));
                 salas.add(rs.getString("Tipo"));
+                salas.add(rs.getString("Precio"));
             }
             return salas;
         } catch (Exception e) {

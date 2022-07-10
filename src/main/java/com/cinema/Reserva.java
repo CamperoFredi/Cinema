@@ -133,10 +133,15 @@ public class Reserva {
                     "WHERE U.Dni = '" + dni + "'";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
+            if (rs == null) {
+                System.out.println("Usted no tiene reservas.");
+            }
             ArrayList<String> r = new ArrayList<>();
             while (rs.next()) {
-                // System.out.println(rs.getString("DiaFuncion") + ", " +
-                // rs.getString("Precio"));
+                System.out.println("Dia: " + rs.getString("DiaFuncion") + ", Precion: " +
+                        rs.getString("Precio") + ", NroSala" + rs.getString("SalaNro")
+                        + ", Nombre Sala" + rs.getString("NombreSala") + ", Pelicula" + rs.getString("NomPelicula"));
+
                 r.add(rs.getString("NomPelicula"));
                 r.add(rs.getString("SalaNro"));
                 r.add(rs.getString("NombreSala"));

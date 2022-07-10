@@ -54,7 +54,7 @@ public class Pelicula {
         }
     }
 
-    public ArrayList<String> getPelicula() {
+    public ArrayList<String> getPeliculas() {
         try {
             Connection con = stm.getConnection();
             String SQL = "SELECT * FROM Peliculas";

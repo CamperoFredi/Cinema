@@ -15,10 +15,12 @@ public class Sala {
     private String Horario;
     private Integer Capacidad;
     private String Tipo;
+    private String Precio;
     private String FechaCreacion;
     Statement conexionDB = ConexionMysql.getStatement();
 
-    public Sala(String salaNro, String nombreSala, String peliculaId, String horario, Integer capacidad, String tipo) {
+    public Sala(String salaNro, String nombreSala, String peliculaId, String horario, Integer capacidad, String tipo,
+            String precio) {
         this.SalaNro = salaNro;
         this.NombreSala = nombreSala;
         this.PeliculaId = peliculaId;
@@ -112,6 +114,14 @@ public class Sala {
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         String dateCreate = localDate.format(formatterDate);
         this.FechaCreacion = dateCreate;
+    }
+
+    public String getPrecio() {
+        return this.Precio;
+    }
+
+    public void setPrecio(String precio) {
+        this.Precio = precio;
     }
 
 }

@@ -76,10 +76,7 @@ public final class App {
                 System.out.println("Descuento del dia " + desc);
                 System.out.println();
                 System.out.println("Salas disponibles: ");
-                ArrayList<String> salas = cine.getListSalas();
-                for (String sala : salas) {
-                    System.out.println(sala);
-                }
+                cine.getListSalas();
                 System.out.println();
 
                 System.out.println("====== OPCIONES ======");
@@ -182,11 +179,13 @@ public final class App {
                 break;
         }
 
+        // System.out.println("======= OPCIONES =======");
         System.out.println("======= OPCIONES ADMINISTRADOR =======");
         System.out.println("1. Agregar una pelicula.");
         System.out.println("2. Agregar una sala.");
-        System.out.println("3. Agregar un descuento.");
-        System.out.println("4. Salir");
+        System.out.println("3. Eliminar Sala.");
+        System.out.println("4. Modificar descuento.");
+        System.out.println("5. Salir");
         System.out.println("Ingrese una opcion: ");
         int opcion = Integer.parseInt(System.console().readLine());
 
@@ -195,10 +194,8 @@ public final class App {
                 System.out.println("Usted va a agregar una pelicula.");
                 System.out.println("Ingrese el nombre de la pelicula: ");
                 String nombre = System.console().readLine();
-
-                System.out.println("Ingrese el precio de la pelicula: ");
-                String precio = System.console().readLine();
-
+                // System.out.println("Ingrese el precio de la pelicula: ");
+                // String precio = System.console().readLine();
                 boolean isAdmin = true;
 
                 try {
@@ -209,43 +206,67 @@ public final class App {
                 break;
             case 2:
                 System.out.println("Usted va a agregar una sala.");
-                System.out.println("Ingrese el nombre de la sala: ");
-                String nombreS = System.console().readLine();
                 System.out.println("Ingrese el numero de la sala: ");
-                int numero = Integer.parseInt(System.console().readLine());
-                System.out.println("Ingrese el numero de asientos: ");
-                int asientos = Integer.parseInt(System.console().readLine());
+                String salaNro = System.console().readLine();
+                System.out.println("Ingrese el nombre de la sala: ");
+                String nombreSala = System.console().readLine();
+                System.out.println("Debe agregar el Id de una pelicula, ¿Desea ver las peliculas disponibles? S/N: ");
+                String resp = System.console().readLine();
+                if (resp.toUpperCase().equals("S")) {
+                    pelicula.getPeliculas();
+                }
+                System.out.println("Ingrese el id de la pelicula: ");
+                String peliculaId = System.console().readLine();
+                System.out.println("Ingrese el horario de la sala: ");
+                String horario = System.console().readLine();
+                System.out.println("Ingrese la capacidad de la sala: ");
+                int capacidad = Integer.parseInt(System.console().readLine());
+                System.out.println("Ingrese el tipo de la sala: ");
+                String tipo = System.console().readLine();
+                System.out.println("Ingrese el precio de la sala: ");
+                String precio = System.console().readLine();
 
-                pelicula.getPelicula();
+                Sala s = new Sala(salaNro, nombreSala, peliculaId, horario, capacidad, tipo, precio);
+                try {
+                    String nsala = cine.agregarNuevaSala(s);
+                    System.out.println(nsala);
+                } catch (SQLException e) {
+                    System.out.println(e.getLocalizedMessage());
+                }
                 break;
-            // case 3:
-            // System.out.println("Usted va a agregar una funcion.");
-            // System.out.println("Ingrese el nombre de la sala: ");
-            // String nombre2 = System.console().readLine();
-            // System.out.println("Ingrese el numero de la sala: ");
-            // int numero2 = Integer.parseInt(System.console().readLine());
-            // System.out.println("Ingrese el numero de asientos: ");
-            // int asientos2 = Integer.parseInt(System.console().readLine());
-            // Sala sala2 = new Sala(nombre2, numero2, asientos2);
-            // try {
-            // cine.agregarSala(sala2);
-            // } catch (SQLException e) {
-            // System.out.println(e.getLocalizedMessage());
-            // }
-            // break;
-            // case 4:
-            // System.out.println("Usted va a agregar un descuento.");
-            // System.out.println("Ingrese el dia: ");
-            // String dia = System.console().readLine();
-            // System.out.println("Ingrese el porcentaje: ");
-            // int porcentaje = Integer.parseInt(System.console().readLine());
-            // Descuento descuento = new Descuento(dia, porcentaje);
-            // try {
-            // cine.agregarDescuento(descuento);
-            // } catch (SQLException e) {
-            // System.out.println(e.getLocalizedMessage());
-            // }
-            // break;
+            case 3:
+                System.out.println("Usted va a eliminar una sala.");
+                System.out
+                        .println("Debe agregar el Id de la salas a eliminar, ¿Desea ver las salas disponibles? S/N: ");
+                String rsala = System.console().readLine();
+                if (rsala.toUpperCase().equals("S")) {
+                    System.out.println("Salas disponibles: ");
+                    ArrayList<String> salas = cine.getListSalas();
+                    for (String sala : salas) {
+                        System.out.println(sala);
+                    }
+                }
+                System.out.println("Ingrese el Id de la sala que desea eliminar: ");
+                int salaNro2 = Integer.parseInt(System.console().readLine());
+                String nsala = cine.borrarSala(salaNro2);
+                System.out.println(nsala);
+                break;
+            case 4:
+                System.out.println("Usted va a modificar un descuento.");
+                System.out.println(
+                        "Debe agregar el Id del descuento a modificar, ¿Desea ver el listado de descuentos disponibles? S/N: ");
+                String rdesc = System.console().readLine();
+                if (rdesc.toUpperCase().equals("S")) {
+                    System.out.println("Descuentos disponibles: ");
+                    descuentos.getListDescuentos();
+                }
+                System.out.println("Ingrese el Id del descuento que desea modificar: ");
+                int descId = Integer.parseInt(System.console().readLine());
+                System.out.println("Ingrese el nuevo descuento: ");
+                int desc = Integer.parseInt(System.console().readLine());
+                String ndesc = descuentos.modificarDescuento(descId, desc);
+                System.out.println(ndesc);
+                break;
 
             case 5:
                 System.out.println("Gracias por visitarnos");
