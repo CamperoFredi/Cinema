@@ -24,6 +24,11 @@ public class Cliente extends Usuario {
         return this.fecha;
     }
 
+    private void setNroTarjeta (long nuevoNroTarjeta)
+	{
+		this.nroTarjeta = nuevoNroTarjeta;
+	}
+
     // Registro de usuario
     public void RegistroDeUsuario() throws SQLException {
         String insertar;
