@@ -35,23 +35,21 @@ public class Pelicula {
         return this.fechaCreacion = dateCreate;
     }
 
-    public void CrearPelicula(String nombrePelicula, boolean EsAdmin) throws SQLException {
-        String insertar;
+    public void CrearPelicula (String nombre) throws SQLException
+	{
+		String insertar;
+		this.nombrePelicula = nombre;
 
-        if (EsAdmin) {
-            // Aqui se crea una cadena con todos los datos pasados al constructor
-            insertar = "";
-            insertar += "INSERT INTO Peliculas (NomPelicula, fecha) VALUE (";
-            insertar += ("\'" + nombrePelicula + "\',");
-            insertar += ("\'" + getFechaCreacion() + "\')");
-
-            // Con esta sentencia se sube la cadena a la base de datos
-            stm.executeUpdate(insertar);
-
-            System.out.println("Se registro la pelicula: " + nombrePelicula);
-        } else {
-            System.out.println("Debe ser administrador para crear una pelicula.");
-        }
+		//Aqui se crea una cadena con todos los datos pasados al constructor
+		insertar ="";
+		insertar += "INSERT INTO PELICULA (NomPelicula, fecha) VALUE (";
+		insertar += ("\'" + getNombrePelicula () + "\',");
+		insertar += ("\'"+ getFechaCreacion () + "\')");
+		
+		//Con esta sentencia se sube la cadena a la base de datos
+		stm.executeUpdate(insertar);
+		
+		System.out.println("Se registro la pelicula: " + this.nombrePelicula);
     }
 
     public ArrayList<String> getPeliculas() {

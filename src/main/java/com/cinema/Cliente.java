@@ -10,9 +10,6 @@ public class Cliente extends Usuario {
 
     Statement stm = ConexionMysql.getStatement();
 
-    public Cliente() {
-    }
-
     // Constructor para el cliente
     public Cliente() throws SQLException {
     }
@@ -30,6 +27,8 @@ public class Cliente extends Usuario {
     // Registro de usuario
     public void RegistroDeUsuario() throws SQLException {
         String insertar;
+
+        Scanner sc = new Scanner (System.in);
 
         System.out.println("Ingrese un nombre de usuario: \n");
         setNomUsuario (sc.nextLine());

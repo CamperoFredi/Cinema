@@ -35,8 +35,8 @@ public class Menu
 	public void MenuGeneral () throws SQLException
 	{
 
-		System.out.println("---INICIO DEL PROGRAMA---");
-		System.out.println("---BIENVENIDO AL CINE---");
+		System.out.println("======= INICIO DEL PROGRAMA =======");
+		System.out.println("======= OPCIONES GENERALES =======");
 		System.out.println("Presione una tecla para continuar...");
 		sc.nextLine();
 		cls ();
@@ -45,7 +45,7 @@ public class Menu
 		{
 			try
 			{
-				System.out.println("\n---MENU GENERAL---\n");
+				System.out.println("\n======= MENU GENERAL =======\n");
 				MostrarOpcionesGenerales ();
 				System.out.println("\nIngrese una opcion: \n");
 				op = sc.nextInt();
@@ -130,7 +130,7 @@ public class Menu
 	public void MenuCliente ()
 	{
 		cls ();
-		System.out.println("---MENU DEL USUARIO---");
+		System.out.println("======= OPCIONES CLIENTE =======");
 		MostrarOpcionesCliente ();
 		System.out.println("\nIngrese una opcion: \n");
 		op = sc.nextInt();
@@ -244,6 +244,7 @@ public class Menu
 				salir = true;
 				}
 			}
+        }
 			catch (InputMismatchException e)
 			{
 				salir = true;
@@ -267,7 +268,7 @@ public class Menu
 	public void MenuAdministrador ()
 	{
 		cls ();
-		System.out.println("---MENU DEL USUARIO---");
+
 		MostrarOpcionesCliente ();
 		System.out.println("\nIngrese una opcion: \n");
 		op = sc.nextInt();
@@ -279,33 +280,84 @@ public class Menu
 				switch (op)
 				{
 	            case 1:
-	                System.out.println("Usted va a agregar una pelicula.");
-	                System.out.println("Ingrese el nombre de la pelicula: ");
-	                String nombre = System.console().readLine();
+                System.out.println("Usted va a agregar una pelicula.");
+                System.out.println("Ingrese el nombre de la pelicula: ");
+                String nombre = System.console().readLine();
+                // System.out.println("Ingrese el precio de la pelicula: ");
+                // String precio = System.console().readLine();
+                boolean isAdmin = true;
 
-	                System.out.println("Ingrese el precio de la pelicula: ");
-	                String precio = System.console().readLine();
+                try {
+                    pelicula.CrearPelicula(nombre, isAdmin);
+                } catch (SQLException e) {
+                    System.out.println(e.getLocalizedMessage());
+                }
+                break;
+            case 2:
+                System.out.println("Usted va a agregar una sala.");
+                System.out.println("Ingrese el numero de la sala: ");
+                String salaNro = System.console().readLine();
+                System.out.println("Ingrese el nombre de la sala: ");
+                String nombreSala = System.console().readLine();
+                System.out.println("Debe agregar el Id de una pelicula, ¿Desea ver las peliculas disponibles? S/N: ");
+                String resp = System.console().readLine();
+                if (resp.toUpperCase().equals("S")) {
+                    pelicula.getPeliculas();
+                }
+                System.out.println("Ingrese el id de la pelicula: ");
+                String peliculaId = System.console().readLine();
+                System.out.println("Ingrese el horario de la sala: ");
+                String horario = System.console().readLine();
+                System.out.println("Ingrese la capacidad de la sala: ");
+                int capacidad = Integer.parseInt(System.console().readLine());
+                System.out.println("Ingrese el tipo de la sala: ");
+                String tipo = System.console().readLine();
+                System.out.println("Ingrese el precio de la sala: ");
+                String precio = System.console().readLine();
 
-	                try {
-	                    pelicula.CrearPelicula(nombre);
-	                } catch (SQLException e) {
-	                    System.out.println(e.getLocalizedMessage());
-	                }
-	                break;
-	            case 2:
-	                System.out.println("Usted va a agregar una sala.");
-	                System.out.println("Ingrese el nombre de la sala: ");
-	                String nombreS = System.console().readLine();
-	                System.out.println("Ingrese el numero de la sala: ");
-	                int numero = Integer.parseInt(System.console().readLine());
-	                System.out.println("Ingrese el numero de asientos: ");
-	                int asientos = Integer.parseInt(System.console().readLine());
-
-	                pelicula.getPelicula();
-	                break;
+                Sala s = new Sala(salaNro, nombreSala, peliculaId, horario, capacidad, tipo, precio);
+                try {
+                    String nsala = cine.agregarNuevaSala(s);
+                    System.out.println(nsala);
+                } catch (SQLException e) {
+                    System.out.println(e.getLocalizedMessage());
+                }
+                break;
+            case 3:
+                System.out.println("Usted va a eliminar una sala.");
+                System.out
+                        .println("Debe agregar el Id de la salas a eliminar, ¿Desea ver las salas disponibles? S/N: ");
+                String rsala = System.console().readLine();
+                if (rsala.toUpperCase().equals("S")) {
+                    System.out.println("Salas disponibles: ");
+                    ArrayList<String> salas = cine.getListSalas();
+                    for (String sala : salas) {
+                        System.out.println(sala);
+                    }
+                }
+                System.out.println("Ingrese el Id de la sala que desea eliminar: ");
+                int salaNro2 = Integer.parseInt(System.console().readLine());
+                String nsala = cine.borrarSala(salaNro2);
+                System.out.println(nsala);
+                break;
+            case 4:
+                System.out.println("Usted va a modificar un descuento.");
+                System.out.println(
+                        "Debe agregar el Id del descuento a modificar, ¿Desea ver el listado de descuentos disponibles? S/N: ");
+                String rdesc = System.console().readLine();
+                if (rdesc.toUpperCase().equals("S")) {
+                    System.out.println("Descuentos disponibles: ");
+                    descuentos.getListDescuentos();
+                }
+                System.out.println("Ingrese el Id del descuento que desea modificar: ");
+                int descId = Integer.parseInt(System.console().readLine());
+                System.out.println("Ingrese el nuevo descuento: ");
+                int desc = Integer.parseInt(System.console().readLine());
+                String ndesc = descuentos.modificarDescuento(descId, desc);
+                System.out.println(ndesc);
+                break;
 				
-				
-				case 3:
+				case 5:
 					administrador.CerrarSesion();
 					salir = true;
 				}
@@ -325,9 +377,13 @@ public class Menu
 	
 	public void MostrarOpcionesAdministrador ()
 	{
-		System.out.println("\n1. Crear Pelicula.");
-		//System.out.println("\n2. Iniciar sesion como usuario.");
-		//System.out.println("\n3. Iniciar sesion como administrador.");
-		System.out.println("\n4. Cerrar Sesion.");
+		System.out.println("======= OPCIONES ADMINISTRADOR =======");
+        System.out.println("1. Agregar una pelicula.");
+        System.out.println("2. Agregar una sala.");
+        System.out.println("3. Eliminar Sala.");
+        System.out.println("4. Modificar descuento.");
+        System.out.println("5. Cerrar Sesion.");
+        System.out.println("Ingrese una opcion: ");
+		
 	}
 }
