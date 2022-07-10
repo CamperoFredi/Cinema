@@ -14,7 +14,7 @@ public class Cliente extends Usuario {
     }
 
     // Constructor para el cliente
-    public Cliente(String nomUsuario, String nya, long dni, String contra, long nroTarjeta, String fecha)
+    public Cliente(String nomUsuario, String nya, String dni, String contra, long nroTarjeta, String fecha)
             throws SQLException {
         super(nomUsuario, nya, dni, contra);
         this.nroTarjeta = nroTarjeta;

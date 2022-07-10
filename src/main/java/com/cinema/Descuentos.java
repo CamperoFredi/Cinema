@@ -9,10 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-// -	Lunes y  Miércoles: 20%
-// -	Martes y  Jueves: 15%
-// -	Viernes, Sábados y Domingos: 10%
-
 public class Descuentos {
     private int Id;
     private String DiaDescuento;
@@ -21,7 +17,6 @@ public class Descuentos {
 
     Statement conexionDB = ConexionMysql.getStatement();
 
-    // Id, DiaDesceunto, Porcentaje, FechaCreacion
     public Descuentos() {
     }
 
@@ -63,9 +58,6 @@ public class Descuentos {
         this.FechaCreacion = fechaCreacion;
     }
 
-    // - Lunes y Miércoles: 20%
-    // - Martes y Jueves: 15%
-    // - Viernes, Sábados y Domingos: 10%
     public static int getDescuento(String dia) {
         int descuento = 0;
         switch (dia) {
@@ -99,7 +91,7 @@ public class Descuentos {
         String dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US).toUpperCase();
         String diaEsp = formatFecha(dayOfWeek);
         int descuento = getDescuento(diaEsp);
-        return "Descuento: " + diaEsp + " " + descuento + "%";
+        return diaEsp + " " + descuento + "%";
     }
 
     public static String formatFecha(String fechaIng) {
@@ -121,10 +113,10 @@ public class Descuentos {
                 dia = "Viernes";
                 break;
             case "SATURDAY":
-                dia = "Sabado";
+                dia = "Sabados";
                 break;
             case "SUNDAY":
-                dia = "Domingo";
+                dia = "Domingos";
                 break;
         }
         return dia;
@@ -136,7 +128,7 @@ public class Descuentos {
         return dateFormat.format(date);
     }
 
-    public String modificarReserva(Descuentos desc) {
+    public String modificarReserva(Descuentos desc) throws ParseException {
         try {
             conexionDB.executeUpdate(
                     "UPDATE descuentos SET Porcentaje = " + desc.getPorcentaje()
@@ -147,6 +139,18 @@ public class Descuentos {
             System.out.println(e.getLocalizedMessage());
         }
         return null;
+    }
+
+    public Integer getIdDescuento(String dia) {
+        Integer id = 0;
+        try {
+            conexionDB.executeUpdate("SELECT Id FROM descuentos WHERE DiaDescuento = '" + dia + "';");
+            id = conexionDB.getResultSet().getInt("Id");
+            return id;
+        } catch (SQLException e) {
+            System.out.println(e.getLocalizedMessage());
+        }
+        return id;
     }
 
 }

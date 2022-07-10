@@ -1,5 +1,8 @@
 package com.cinema;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -13,6 +16,7 @@ public class Sala {
     private Integer Capacidad;
     private String Tipo;
     private String FechaCreacion;
+    Statement conexionDB = ConexionMysql.getStatement();
 
     public Sala(String salaNro, String nombreSala, String peliculaId, String horario, Integer capacidad, String tipo) {
         this.SalaNro = salaNro;
@@ -60,6 +64,20 @@ public class Sala {
 
     public String getHorario() {
         return this.Horario;
+    }
+
+    public String getHorarioById(int idSala) {
+        try {
+            ResultSet rs = conexionDB.executeQuery("SELECT * FROM Salas WHERE Id = '" + idSala + "'");
+            while (rs.next()) {
+                this.Horario = rs.getString("Horario");
+                return String.valueOf(rs.getString("Horario"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getLocalizedMessage());
+        }
+
+        return null;
     }
 
     public void setHorario(String horario) {

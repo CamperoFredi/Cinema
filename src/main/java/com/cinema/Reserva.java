@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Reserva {
+    private int Id;
     private int UsuarioId;
     private int SalaId;
     private int DescuentoId;
     private String DiaFuncion;
-    private Boolean Modificada;
+    private String Modificada;
     private String Precio;
-    private Boolean ConfirmaPago;
+    private String ConfirmaPago;
     private String FechaCreacion;
 
     Statement conexionDB = ConexionMysql.getStatement();
@@ -25,14 +26,15 @@ public class Reserva {
     public Reserva() {
     }
 
-    public Reserva(int salaId, String diaFuncion, boolean modificada, String precio,
-            boolean confirmaPago, String fechaCreacion) {
+    public Reserva(int usuarioId, int salaId, int idDescuent, String diaFuncion, String modificada, String precio,
+            String confirmaPago) {
+        this.UsuarioId = usuarioId;
         this.SalaId = salaId;
+        this.DescuentoId = idDescuent;
         this.DiaFuncion = diaFuncion;
         this.Modificada = modificada;
         this.Precio = precio;
         this.ConfirmaPago = confirmaPago;
-        this.FechaCreacion = fechaCreacion;
     }
 
     public int getSalaId() {
@@ -41,6 +43,14 @@ public class Reserva {
 
     public void setSalaId(int salaId) {
         this.SalaId = salaId;
+    }
+
+    public int getUsuarioId() {
+        return this.UsuarioId;
+    }
+
+    public void setUsuarioId(int usuarioId) {
+        this.UsuarioId = usuarioId;
     }
 
     public String getDiaFuncion() {
@@ -55,8 +65,8 @@ public class Reserva {
         return false;
     }
 
-    public void setModificada(Boolean modificada) {
-        this.Modificada = modificada ? modificada : false;
+    public void setModificada(String modificada) {
+        this.Modificada = modificada;
     }
 
     public String getPrecio() {
@@ -67,11 +77,11 @@ public class Reserva {
         this.Precio = precio;
     }
 
-    public Boolean getConfirmaPago() {
+    public String getConfirmaPago() {
         return this.ConfirmaPago;
     }
 
-    public void setConfirmaPago(Boolean confirmaPago) {
+    public void setConfirmaPago(String confirmaPago) {
         this.ConfirmaPago = confirmaPago;
     }
 
@@ -97,8 +107,9 @@ public class Reserva {
     public String agregarReserva(Reserva reser) throws SQLException {
         try {
             conexionDB.executeUpdate(
-                    "INSERT INTO reservas(UsuarioId, SalaId, DescuentoId, DiaFuncion, Modificada, Precio, ConfirmaPago, FechaCreacion) VALUES(1, '"
-                            + reser.getSalaId()
+                    "INSERT INTO reservas(UsuarioId, SalaId, DescuentoId, DiaFuncion, Modificada, Precio, ConfirmaPago, FechaCreacion) VALUES("
+                            + reser.getUsuarioId()
+                            + ", '" + reser.getSalaId()
                             + "', '" + reser.getDescuentoId()
                             + "', '" + reser.getDiaFuncion()
                             + "', '" + reser.getModificada()
@@ -112,26 +123,28 @@ public class Reserva {
         return null;
     }
 
-    public ArrayList<Reserva> getMisReservas(String dni) {
+    public ArrayList<String> getMisReservas(String dni) {
         try {
             Connection con = conexionDB.getConnection();
-            String SQL = "SELECT * FROM reservas INNER JOIN usuarios ON reservas.UsuarioId = usuarios.Id WHERE usuarios.dni = "
-                    + dni + ";";
+            String SQL = "SELECT P.NomPelicula, S.SalaNro, S.NombreSala, R.DiaFuncion, R.Precio, R.ConfirmaPago FROM Reservas R "
+                    + "INNER JOIN Usuarios U ON R.UsuarioId = U.Id"
+                    + "INNER JOIN Salas S ON R.SalaId = S.Id"
+                    + "INNER JOIN Peliculas P ON S.PeliculaId = P.Id" +
+                    "WHERE U.Dni = '" + dni + "'";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
-            ArrayList<Reserva> reservas = new ArrayList<Reserva>();
+            ArrayList<String> r = new ArrayList<>();
             while (rs.next()) {
-                System.out.println(rs.getString("DiaFuncion") + ", " + rs.getString("Precio"));
-                Reserva r = new Reserva();
-                r.setSalaId(rs.getInt("SalaNro"));
-                r.setDiaFuncion(rs.getString("DiaFuncion"));
-                r.setModificada(rs.getBoolean("Modificada"));
-                r.setPrecio(rs.getString("Precio"));
-                r.setConfirmaPago(rs.getBoolean("ConfirmaPago"));
-                r.setFechaCreacion(rs.getString("FechaCreacion"));
-                reservas.add(r);
+                // System.out.println(rs.getString("DiaFuncion") + ", " +
+                // rs.getString("Precio"));
+                r.add(rs.getString("NomPelicula"));
+                r.add(rs.getString("SalaNro"));
+                r.add(rs.getString("NombreSala"));
+                r.add(rs.getString("DiaFuncion"));
+                r.add(rs.getString("Precio"));
+                r.add(rs.getString("ConfirmaPago"));
             }
-            return reservas;
+            return r;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,10 +169,14 @@ public class Reserva {
         return null;
     }
 
-    public ResultSet getReserva(int usuarioId) {
+    public ResultSet getReserva(String dni, int reservaId) {
         try {
             Connection con = conexionDB.getConnection();
-            String SQL = "SELECT * FROM Reservas WHERE UsuarioId = " + usuarioId + ";";
+            String SQL = "SELECT P.NomPelicula, S.SalaNro, S.NombreSala, R.DiaFuncion, R.Precio, R.ConfirmaPago, R.DescuentoId, R.Precio FROM Reservas R "
+                    + "INNER JOIN Usuarios U ON R.UsuarioId = U.Id"
+                    + "INNER JOIN Salas S ON R.SalaId = S.Id"
+                    + "INNER JOIN Peliculas P ON S.PeliculaId = P.Id" +
+                    "WHERE U.Dni = '" + dni + "' AND R.Id = '" + reservaId + "'";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()) {

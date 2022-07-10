@@ -7,7 +7,7 @@ import java.sql.Statement;
 public class Usuario {
     protected String nomUsuario; // Nombre de Usuario
     protected String nya; // Nombre y Apellido
-    protected long dni;
+    protected String dni;
     protected String contra; // contrasenia
     protected boolean SesionIniciada = false;
     protected boolean admin;
@@ -22,7 +22,7 @@ public class Usuario {
     Statement stm = ConexionMysql.getStatement();
     // ResultSet result = stm.executeQuery("SELECT * from USUARIO");
 
-    public Usuario(String nomUsuario, String nya, long dni, String contra) throws SQLException {
+    public Usuario(String nomUsuario, String nya, String dni, String contra) throws SQLException {
         this.nomUsuario = nomUsuario;
         this.nya = nya;
         this.dni = dni;
@@ -41,7 +41,7 @@ public class Usuario {
         return this.nya;
     }
 
-    public long getDNI() {
+    public String getDNI() {
         return this.dni;
     }
 

@@ -64,23 +64,19 @@ public class Cine {
         return false;
     }
 
-    public ArrayList<Sala> getListSalas() {
+    public ArrayList<String> getListSalas() {
         try {
             Connection con = conexionDB.getConnection();
-            String SQL = "SELECT * FROM Salas";
+            String SQL = "SELECT * FROM Salas S INNER JOIN Peliculas P ON S.PeliculaId = P.Id;";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
-            ArrayList<Sala> salas = new ArrayList<Sala>();
+            ArrayList<String> salas = new ArrayList<>();
             while (rs.next()) {
-                System.out.println(rs.getString("SalaNro") + ", " + rs.getString("NombreSala"));
-                Sala sala = new Sala();
-                sala.setNombreSala(rs.getString("nombreSala"));
-                sala.setNroSala(rs.getString("SalaNro"));
-                sala.setPeliculaId(rs.getString("PeliculaId"));
-                sala.setHorario(rs.getString("Horario"));
-                sala.setTipo(rs.getString("Tipo"));
-                salas.add(sala);
-
+                salas.add(rs.getString("SalaNro"));
+                salas.add(rs.getString("nombreSala"));
+                salas.add(rs.getString("PeliculaId"));
+                salas.add(rs.getString("Horario"));
+                salas.add(rs.getString("Tipo"));
             }
             return salas;
         } catch (Exception e) {
