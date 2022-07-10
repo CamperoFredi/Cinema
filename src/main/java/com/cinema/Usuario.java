@@ -3,6 +3,7 @@ package com.cinema;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class Usuario {
     protected String nomUsuario; // Nombre de Usuario
@@ -33,80 +34,69 @@ public class Usuario {
     public Usuario() {
     }
 
-   public String getNomUsuario ()
-	{
-		return this.nomUsuario;
-	}
-	
-	public String getnya ()
-	{
-		return this.nya;
-	}
-	
-	public String getDNI ()
-	{
-		return this.dni;
-	}
-	
-	public String getcontra ()
-	{
-		return this.contra;
-	}
-	
-	public void setNomUsuario (String nuevoNombre)
-	{
-		this.nomUsuario = nuevoNombre;
-	}
-	
-	public void setNyA (String nuevoNyA)
-	{
-		this.nya = nuevoNyA;
-	}
-	
-	public void setDNI (String nuevoDNI)
-	{
-		this.dni = nuevoDNI;
-	}
-	
-	public void setContra (String nuevaContra)
-	{
-		this.contra = nuevaContra;
-	}
+    public String getNomUsuario() {
+        return this.nomUsuario;
+    }
+
+    public String getnya() {
+        return this.nya;
+    }
+
+    public String getDNI() {
+        return this.dni;
+    }
+
+    public String getcontra() {
+        return this.contra;
+    }
+
+    public void setNomUsuario(String nuevoNombre) {
+        this.nomUsuario = nuevoNombre;
+    }
+
+    public void setNyA(String nuevoNyA) {
+        this.nya = nuevoNyA;
+    }
+
+    public void setDNI(String nuevoDNI) {
+        this.dni = nuevoDNI;
+    }
+
+    public void setContra(String nuevaContra) {
+        this.contra = nuevaContra;
+    }
 
     // Inicio de Sesion
     public void IniciarSesion() throws SQLException {
 
-            String nombreUsuario;
-			String contra;
-			
-			Scanner sc = new Scanner (System.in);
-			
-			System.out.println("Ingrese nombre de Usuario: \n");
-			nombreUsuario = sc.nextLine();
-			
-			System.out.println("Ingrese contraseña: \n");
-			contra = sc.nextLine();
-			
-			ResultSet result = stm.executeQuery("select * from USUARIO");
-			//Se compara el nombre de usuario y contrasenia de la base de datos con el nombre de usuario y contrasenia pasados por parametro 
-			while (result.next () && !this.SesionIniciada)
-			{
-				if (nombreUsuario.equals(result.getString("nomUsuario")) && contra.equals(result.getString("contra")))
-				{
-					setNomUsuario (result.getString("nomUsuario"));
-					setDNI (result.getString("dni"));
-					this.SesionIniciada = true;			//Si el nombre de usuario y la contrasenia coinciden, se pone a la sesion iniciada en true
-				}
-			}
-			if (this.SesionIniciada)
-			{
-				System.out.println("Sesion iniciada con el usuario: " + nombreUsuario);
-			}
-			else
-			{
-				System.out.println("Nombre de usuario o contrasenia incorrectos.");
-			}
-			sc.close();
+        String nombreUsuario;
+        String contra;
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Ingrese nombre de Usuario: \n");
+        nombreUsuario = sc.nextLine();
+
+        System.out.println("Ingrese contraseña: \n");
+        contra = sc.nextLine();
+
+        ResultSet result = stm.executeQuery("select * from USUARIO");
+        // Se compara el nombre de usuario y contrasenia de la base de datos con el
+        // nombre de usuario y contrasenia pasados por parametro
+        while (result.next() && !this.SesionIniciada) {
+            if (nombreUsuario.equals(result.getString("nomUsuario")) && contra.equals(result.getString("contra"))) {
+                setNomUsuario(result.getString("nomUsuario"));
+                setDNI(result.getString("dni"));
+                this.SesionIniciada = true; // Si el nombre de usuario y la contrasenia coinciden, se pone a la sesion
+                                            // iniciada en true
+            }
+        }
+        if (this.SesionIniciada) {
+            System.out.println("Sesion iniciada con el usuario: " + nombreUsuario);
+        } else {
+            System.out.println("Nombre de usuario o contrasenia incorrectos.");
+        }
+        sc.close();
 
     }
 
