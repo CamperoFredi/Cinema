@@ -119,8 +119,6 @@ public class Menu {
                     case 1:
                         System.out.println("======= SALAS =======");
                         String desc = Descuentos.GetDiaDescuentoActual();
-                        System.out.println(desc);
-
                         System.out.println("Descuento del dia " + desc);
                         System.out.println();
                         System.out.println("Salas disponibles: ");
