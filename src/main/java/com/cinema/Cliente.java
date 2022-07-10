@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Cliente extends Usuario {
+    private int Id;
     private String nroTarjeta; // Numero de Tarjeta
     private String fecha; // Fecha de registro en el formato "dd-MM-yyyy"
 
@@ -16,6 +17,10 @@ public class Cliente extends Usuario {
     }
 
     // Getters
+
+    public int getId() {
+        return Id;
+    }
 
     public String getNroTarjeta() {
         return this.nroTarjeta;

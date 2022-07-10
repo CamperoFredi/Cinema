@@ -119,6 +119,8 @@ public class Menu {
                     case 1:
                         System.out.println("======= SALAS =======");
                         String desc = Descuentos.GetDiaDescuentoActual();
+                        System.out.println(desc);
+
                         System.out.println("Descuento del dia " + desc);
                         System.out.println();
                         System.out.println("Salas disponibles: ");
@@ -136,17 +138,15 @@ public class Menu {
                                 System.out.println("Usted va a realizar una reserva.");
                                 System.out.println("Coloque el numero de la sala que desea reservar: ");
                                 int idSala = Integer.parseInt(System.console().readLine());
+                                System.out.println("Abonar entrada: ");
+                                String precio = String.valueOf(System.console().readLine());
                                 String descu = descuentos.GetDiaDescuentoActual();
                                 String dia = descu.split(" ")[0];
                                 int idDescuent = descuentos.getIdDescuento(dia);
                                 String diaFun = sala.getHorarioById(idSala);
-
-                                System.out.println("Abonar entrada: ");
-                                String precio = String.valueOf(System.console().readLine());
-
-                                Reserva r = new Reserva(1, idSala, idDescuent, diaFun, "0", precio, "1");
-
                                 try {
+                                    Reserva r = new Reserva(cliente.getId(), idSala, idDescuent, diaFun, "0", precio,
+                                            "1");
                                     reserva.agregarReserva(r);
                                 } catch (SQLException e) {
                                     System.out.println(e.getLocalizedMessage());

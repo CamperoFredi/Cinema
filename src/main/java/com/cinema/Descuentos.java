@@ -74,8 +74,8 @@ public class Descuentos {
                 descuento = 15;
                 break;
             case "Viernes":
-            case "Sabado":
-            case "Domingo":
+            case "Sabados":
+            case "Domingos":
                 descuento = 10;
                 break;
         }
